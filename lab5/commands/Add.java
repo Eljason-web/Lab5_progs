@@ -1,7 +1,5 @@
 package org.example.commands;
 
-//import org.example.utils.CollectionManager;
-
 import org.example.utils.CollectionManager;
 
 public class Add implements Commands{
