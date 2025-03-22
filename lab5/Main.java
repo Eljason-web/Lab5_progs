@@ -25,7 +25,7 @@ public class Main {
 
 
                 CommandManager commandManager = new CommandManager(collectionManager);
-                ConsoleManager consoleManager = new ConsoleManager(commandManager, new Scanner(System.in));
+                ConsoleManager consoleManager = new ConsoleManager(commandManager);
                 consoleManager.interactiveMode(); //triggers interactive mode with user
         }
 }
