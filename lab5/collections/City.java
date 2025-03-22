@@ -156,22 +156,23 @@ public class City {
 
     @Override
     public String toString() {
-        String string = "CITY DATA: \n";
-        string += "id: " + id + "\n";
-        string += "name: " + name + "\n";
-        string += coordinates.toString() + "\n";
+        StringBuilder sb = new StringBuilder();
+        sb.append("CITY DATA: \n")
+            .append("id: ").append(id).append("\n")
+            .append("name: ").append(name).append("\n")
+            .append(coordinates.toString()).append("\n");
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        string += "creation date: "+creationDate.format(formatter) + "\n";
+        sb.append("creation date: ").append(creationDate.format(formatter)).append("\n")
+                .append("area: ").append(area).append("\n")
+                .append("population: ").append(population).append("\n")
+                .append("meters above sea level: ").append(metersAboveSeaLevel).append("\n")
+                .append("agglomeration: ").append(agglomeration).append("\n")
+                .append("Climate: ").append(climate).append("\n")
+                .append("Government: ").append(government).append("\n")
+                .append("Human: ").append(governor);
 
-        string += "area: " + area + "\n";
-        string += "population: " + population + "\n";
-        string += " meters above sea level: " + metersAboveSeaLevel + "\n";
-        string += "agglomeration: " + agglomeration + "\n";
-        string += "Climate: " + climate + "\n";
-        string += "Government: " + government + "\n";
-        string += "Human: " + governor;
 
-        return string;
+        return sb.toString();
     }
 }
