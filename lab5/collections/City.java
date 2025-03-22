@@ -1,9 +1,5 @@
 package org.example.collections;
 
-//import jakarta.xml.bind.annotation.XmlAccessType;
-//import jakarta.xml.bind.annotation.XmlAccessorType;
-//import jakarta.xml.bind.annotation.XmlRootElement;
-//import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.example.utils.LocalDateAdapter;
 import org.example.utils.LocalDateTimeAdapter;
 
@@ -46,6 +42,11 @@ public class City {
     }
 
     public City() {
+    }
+
+    @Override
+    public int compareTo(City otherCity) {
+        return Integer.compare(this.id, otherCity.id);
     }
 
 
