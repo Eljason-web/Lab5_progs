@@ -6,7 +6,7 @@ public class ConsoleManager {
     private final CommandManager commandManager;
     private final Scanner scanner;
 
-    public ConsoleManager(CommandManager commandManager, Scanner scanner){
+    public ConsoleManager(CommandManager commandManager){
         this.commandManager = commandManager;
         this.scanner = new Scanner(System.in);
     }
