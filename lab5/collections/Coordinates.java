@@ -1,8 +1,5 @@
 package org.example.collections;
 
-//import jakarta.xml.bind.annotation.XmlAccessType;
-//import jakarta.xml.bind.annotation.XmlAccessorType;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
@@ -43,11 +40,12 @@ public class Coordinates {
 
     @Override
     public String toString() {
-        String string = "Coordinates: \n";
-        string += "\t x: " + x + "\n";
-        string += "\t y: " + y;
+        StringBuilder sb = new StringBuilder();
+        sb.append("Coordinates: \n")
+            .append("\t x: ").append(x).append("\n")
+            .append("\t y: ").append(y).append("\n");
 
-        return string;
+        return sb.toString();
     }
 
 
