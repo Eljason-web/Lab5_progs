@@ -1,6 +1,5 @@
 package org.example.commands;
 
-import org.example.utils.CollectionManager;
 
 public class Help implements Commands{
 
