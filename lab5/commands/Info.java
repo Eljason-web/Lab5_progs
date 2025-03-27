@@ -16,6 +16,7 @@ public class Info implements Commands{
 
     @Override
     public void execute() {
-        collectionManager.info();
+        String infoString = collectionManager.info();
+        System.out.println(infoString);
     }
 }
