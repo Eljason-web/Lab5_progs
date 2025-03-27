@@ -2,10 +2,6 @@ package org.example.utils;
 
 import org.example.collections.*;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -21,71 +17,51 @@ import java.util.*;
 
 
 
-@XmlRootElement(name = "list")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class CollectionManager {
-    @XmlElement(name = "city")
-    private final ArrayDeque<City> cities = new ArrayDeque<>();
-    private final Scanner scanner;
+    private final CityCollection cityCollection;
 
-    public CollectionManager(Scanner scanner) {
-        this.scanner = scanner;
+    public CollectionManager(CityCollection cityCollection) {
+        this.cityCollection = cityCollection;
     }
 
-    public ArrayDeque<City> getCities() {
-        return cities;
+    public CityCollection getCityCollection() {
+        return cityCollection;
     }
 
-    public void setCities(ArrayDeque<City> loadedCollection) {
+    public void setCityCollection(ArrayDeque<City> loadedCollection) {
         if(loadedCollection != null) {
-            cities.clear();
-            cities.addAll(loadedCollection);
+           cityCollection.addAllCities(loadedCollection);
         } else {
             System.out.println("Warning: Attempted to load null collection");
         }
     }
 
-    public void addToCollection(City city) {
-        if (city != null) {
-            cities.add(city);
-            //sorting logic implementing the comparable in city
-            List<City> cityList = new ArrayList<>(cities);
-            cityList.sort(null);
-            cities.clear();
-            cities.addAll(cityList);
-
-            System.out.println("City added: " + city.getName());
+    public String show() {
+        if (cityCollection.getCities().isEmpty()) {
+            return "We do not have any cities in our collection";
         } else {
-            System.out.println("City doesn't have some required details");
-        }
-    }
-
-    public void show() {
-        if (cities.isEmpty()) {
-            System.out.println("We do not have any cities in our collection");
-        } else {
-            System.out.println("LIST OF CITIES ON THE COLLECTION");
-            for (City city : cities) {
-                String cityString = city.toString();
-                System.out.println(cityString);
-                System.out.println();
+            StringBuilder result = new StringBuilder("LIST OF CITIES IN THE COLLECTION:\n");
+            for (City city : cityCollection.getCities()) {
+                result.append(city.toString()).append("\n\n");
             }
+            return result.toString();
         }
     }
 
-    public void info() {
-        System.out.println("Information about collection");
-        System.out.println("Type: " + cities.getClass());
+    public String info() {
         String initializationDate = getInitializationDate();
-        System.out.println("Initialization date: " + initializationDate);
-        int numberOfElements = cities.size();
-        System.out.println("Number of cities: " + numberOfElements);
+        int numberOfElements = cityCollection.getCities().size();
+        return "Information about collection\n" +
+                "Type: " + cityCollection.getCities().getClass() + "\n" +
+                "Initialization date: " + initializationDate + "\n" +
+                "Number of cities: " + numberOfElements;
     }
 
     private String getInitializationDate() {
         String date = "";
         try {
-            Path path = Paths.get("storage.xml");
+            String fileName = System.getenv("FILE_COLLECTION_PATH");
+            Path path = Paths.get(fileName);
             BasicFileAttributes attrs = Files.readAttributes(path, BasicFileAttributes.class);
             FileTime fileTime = attrs.creationTime();
             Instant instant = fileTime.toInstant();
@@ -99,146 +75,60 @@ public class CollectionManager {
         return date;
     }
 
-    public void add() {
+    public void add(City city) {
         //for automatically generated values
         int id = generateId();
-        System.out.println("ID automatically generated: " + id);
-
         LocalDate creationDate = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        String formattedDate = creationDate.format(formatter);
-        System.out.println("Creation date was automatically generated: " + formattedDate);
 
-        CityReader cityReader = new CityReader(scanner);
-        City newCity = cityReader.collectCityData();
+        city.setId(id);
+        city.setCreationDate(creationDate);
 
-
-        newCity.setId(id);
-        newCity.setCreationDate(creationDate);
-
-        addToCollection(newCity);
-
-    }
-
-    public void addIfMax(){
-        //for automatically generated values
-        int id = generateId();
-        System.out.println("ID automatically generated: " + id);
-
-        LocalDate creationDate = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        String formattedDate = creationDate.format(formatter);
-        System.out.println("Creation date was automatically generated: " + formattedDate);
-
-
-        Scanner scanner = new Scanner(System.in);
-        CityReader cityReader = new CityReader(scanner);
-        City newCity = cityReader.collectCityData();
-
-        // I use here population to determine max city
-        boolean isMaxCity = true;
-        for (City city : cities){
-            if(city.getPopulation() > newCity.getPopulation()) {
-                isMaxCity = false;
-                break;
-            }
-        }
-
-        if(isMaxCity) {
-            addToCollection(newCity);
-        } else {
-            System.out.println("New city added is not max city");
-        }
-    }
-
-    public void addIfMin(){
-        //for automatically generated values
-        int id = generateId();
-        System.out.println("ID automatically generated: " + id);
-
-        LocalDate creationDate = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        String formattedDate = creationDate.format(formatter);
-        System.out.println("Creation date was automatically generated: " + formattedDate);
-
-
-        Scanner scanner = new Scanner(System.in);
-        CityReader cityReader = new CityReader(scanner);
-        City newCity = cityReader.collectCityData();
-
-        // I use here population to determine max city
-        boolean isMinCity = true;
-        for (City city : cities){
-            if(city.getPopulation() < newCity.getPopulation()) {
-                isMinCity = false;
-                break;
-            }
-        }
-
-        if(isMinCity) {
-            addToCollection(newCity);
-        } else {
-            System.out.println("New city added is not minimum city");
-        }
+        cityCollection.addCity(city);
     }
 
     private int generateId() {
-        if(cities.isEmpty()) {
+        if(cityCollection.getCities().isEmpty()) {
             return 1;
         }
-        return cities.getLast().getId() + 1; // works because array deque is already sorted
+        return cityCollection.getCities().getLast().getId() + 1; // works because array deque is already sorted
     }
 
-
-    public void clear() {
-        if(!cities.isEmpty()){
-            ArrayDeque<City> toRemove = new ArrayDeque<>(cities);
-            cities.removeAll(toRemove);
-            System.out.println("Collection has been cleared");
-        } else {
-            System.out.println("Collection is empty");
+    public City findCityById(int id){
+        for(City city : cityCollection.getCities()){
+            if(city.getId() == id) {
+                return city;
+            }
         }
-
+        return null;
     }
 
-    public void updateCity(City city) {
-        Scanner scanner = new Scanner(System.in);
-        CityReader cityReader = new CityReader(scanner);
+    public void clearCollection() {
+            cityCollection.clearCities();
+    }
 
-        String name = cityReader.addName();
+    public void updateCity(City originalCity, City cityUpdates) {
+        originalCity.setName(cityUpdates.getName());
+        originalCity.setCoordinates(cityUpdates.getCoordinates());
+        originalCity.setArea(cityUpdates.getArea());
+        originalCity.setPopulation(cityUpdates.getPopulation());
+        originalCity.setMetersAboveSeaLevel(cityUpdates.getMetersAboveSeaLevel());
+        originalCity.setAgglomeration(cityUpdates.getAgglomeration());
+        originalCity.setClimate(cityUpdates.getClimate());
+        originalCity.setGovernment(cityUpdates.getGovernment());
+        originalCity.setGovernor(cityUpdates.getGovernor());
 
-        Coordinates coordinates = cityReader.addCoordinate();
-        float area = cityReader.addArea();
-        Long population = cityReader.addPopulation();
-        double metersAboveSeaLevel = cityReader.addMetersAboveSeaLevel();
-        float agglomeration = cityReader.addAgglomeration();
-        Climate climate = cityReader.addClimate();
-        Government government = cityReader.addGovernment();
-        Human governor = cityReader.addGovernor();
 
-        city.setName(name);
-        city.setCoordinates(coordinates);
-        city.setArea(area);
-        city.setPopulation(population);
-        city.setMetersAboveSeaLevel(metersAboveSeaLevel);
-        city.setAgglomeration(agglomeration);
-        city.setClimate(climate);
-        city.setGovernment(government);
-        city.setGovernor(governor);
-
-        System.out.println("City with id: " + city.getId() + " has been updated");
     }
 
     public void removeCity(City city) {
-        cities.remove(city);
-        System.out.println("City with ID " + city.getId() + " has been removed");
+        cityCollection.removeCity(city);
     }
 
     public int countByAgglomeration(float agglomerationValue) {
         int count = 0;
 
         // Loop through cities and compare the agglomeration values
-        for (City city : cities) {
+        for (City city : cityCollection.getCities()) {
             if (city.getAgglomeration() == agglomerationValue) {
                 count++;
             }
