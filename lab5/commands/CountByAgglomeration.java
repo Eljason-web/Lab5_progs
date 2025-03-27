@@ -16,7 +16,12 @@ public class CountByAgglomeration implements Commands{
 
     @Override
     public void execute(String arg) {
-        int count = collectionManager.countByAgglomeration(arg);
-        System.out.println("Number of cities with agglomeration " + arg + " is " + count);
+        try{
+            float agglomerationValue = Float.parseFloat(arg);
+            int count = collectionManager.countByAgglomeration(agglomerationValue);
+            System.out.println("Number of cities with agglomeration " + arg + " is " + count);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid number format for agglomeration: " + arg);
+        }
     }
 }
