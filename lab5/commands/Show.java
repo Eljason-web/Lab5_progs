@@ -16,6 +16,7 @@ public class Show implements Commands{
 
     @Override
     public void execute() {
-        collectionManager.show();
+        String showResult = collectionManager.show();
+        System.out.println(showResult);
     }
 }
