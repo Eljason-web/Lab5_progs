@@ -13,7 +13,7 @@ public class CityReader {
         this.scanner = scanner;
     }
 
-    City collectCityData(){
+    public City collectCityData(){
 
         String name = addName();
 
@@ -36,12 +36,12 @@ public class CityReader {
         return new City(0, name, coordinates, LocalDate.now(), area, population, metersAboveSeaLevel, agglomeration, climate, government, governor);
     }
 
-    String addName(){
+    protected String addName(){
         System.out.print("Enter name: ");
         return scanner.next();
     }
 
-     Coordinates addCoordinate() {
+    protected Coordinates addCoordinate() {
         Coordinates coordinates = new Coordinates();
         boolean validInput = false;
 
@@ -66,7 +66,7 @@ public class CityReader {
         return coordinates;
     }
 
-     float addArea() {
+    protected float addArea() {
         float area = 0.0f;
         boolean validInput = false;
         while (!validInput) {
@@ -82,7 +82,7 @@ public class CityReader {
         return area;
     }
 
-     Long addPopulation() {
+    protected Long addPopulation() {
         long population = 0;
         boolean validInput = false;
         while (!validInput) {
@@ -98,7 +98,7 @@ public class CityReader {
         return population;
     }
 
-     double addMetersAboveSeaLevel() {
+     protected double addMetersAboveSeaLevel() {
         double meters = 0.0;
         boolean validInput = false;
         while (!validInput) {
@@ -115,7 +115,7 @@ public class CityReader {
     }
 
 
-     float addAgglomeration() {
+     protected float addAgglomeration() {
         float agglomeration = 0.0f;
         boolean validInput = false;
 
@@ -133,7 +133,7 @@ public class CityReader {
         return agglomeration;
     }
 
-     Climate addClimate() {
+     protected Climate addClimate() {
         Climate climate = null;
         boolean validInput = false;
         while (!validInput) {
@@ -153,7 +153,7 @@ public class CityReader {
     }
 
 
-     Government addGovernment() {
+     protected Government addGovernment() {
         Government government = null;
         boolean validInput = false;
         while (!validInput) {
@@ -170,7 +170,7 @@ public class CityReader {
         return government;
     }
 
-     Human addGovernor() {
+     protected Human addGovernor() {
         LocalDateTime birthday = null;
         boolean validInput = false;
 
@@ -186,23 +186,9 @@ public class CityReader {
                 //input for month
                 System.out.println("Enter the month (1 to 12): ");
                 int month = scanner.nextInt();
-                if (month < 1 || month > 12) {
-                    throw new Exception("write month only within 1 to 12");
-                }
-
                 //input for day
                 System.out.println("Enter the day: ");
                 int day = scanner.nextInt();
-                if(month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) {
-                    if (day > 31) throw new Exception("Out of range date in the month");
-                } else if(month == 4 || month == 6 || month == 9 || month == 11) {
-                    if (day > 30) throw new Exception("Out of range date in the month");
-                } else if (year % 4 == 0) {
-                    if (day > 29) throw new Exception("Out of range date in the month");
-                } else {
-                    if (day > 28) throw new Exception("Out of range date in the month");
-                }
-
 
                 birthday = LocalDateTime.of(year, month, day, 0, 0);
                 validInput = true;
