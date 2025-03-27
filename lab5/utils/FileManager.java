@@ -1,10 +1,8 @@
 package org.example.utils;
 
-//import jakarta.xml.bind.JAXBContext;
-//import jakarta.xml.bind.JAXBException;
-//import jakarta.xml.bind.Marshaller;
-//import jakarta.xml.bind.Unmarshaller;
+
 import org.example.collections.City;
+import org.example.collections.CityCollection;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -24,14 +22,14 @@ public class FileManager {
     public void saveToXml(String filePath){
         try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
             // Create JAXB context for the CollectionManager class
-            JAXBContext context = JAXBContext.newInstance(CollectionManager.class);
+            JAXBContext context = JAXBContext.newInstance(CityCollection.class);
             Marshaller marshaller = context.createMarshaller();
 
             // Format the output for better readability
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-            // Marshal the CollectionManager object to XML and save it to the file
-            marshaller.marshal(collectionManager, writer);
+            // Marshal the CityCollection object to XML and save it to the file
+            marshaller.marshal(collectionManager.getCityCollection(), writer);
 
             System.out.println("Collection saved to " + filePath);
         } catch (JAXBException e) {
@@ -44,15 +42,21 @@ public class FileManager {
     public void loadCollectionFromXml(String filePath) {
         try (BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(filePath))){
             // Create a JAXB context for City Collection class
-            JAXBContext context = JAXBContext.newInstance(CollectionManager.class);
+            System.out.println('1');
+            JAXBContext context = JAXBContext.newInstance(CityCollection.class);
+            System.out.println('2');
             Unmarshaller unmarshaller = context.createUnmarshaller();
+            System.out.println(3);
 
             // Deserialize from XML file
-            CollectionManager collection = (CollectionManager) unmarshaller.unmarshal(inputStream);
+            CityCollection cityCollection = (CityCollection) unmarshaller.unmarshal(inputStream);
+            System.out.println('4');
 
             // Get the TreeSet of Persons
-            ArrayDeque<City> loadedCollection = collection.getCities();
-            collectionManager.setCities(loadedCollection);
+            ArrayDeque<City> loadedCollection = cityCollection.getCities();
+            System.out.println('5');
+            collectionManager.setCityCollection(loadedCollection);
+            System.out.println('6');
             System.out.println("Collection loaded successfully!");
         } catch (JAXBException e) {
             System.out.println("Error loading collection: " + e.getMessage());
