@@ -19,18 +19,13 @@ public class RemoveById implements Commands{
     public void execute(String arg) {
         try{
             int id = Integer.parseInt(arg);
-            boolean idFound = false;
+            City city = collectionManager.findCityById(id);
 
-            for(City city : collectionManager.getCities()) {
-                if(city.getId() == id) {
-                    idFound = true;
-                    collectionManager.removeCity(city);
-                    break;
-                }
-            }
-
-            if(!idFound) {
+            if(city == null) {
                 System.out.println("City with ID " + arg + " does not exist");
+            } else {
+                collectionManager.removeCity(city);
+                System.out.println("City with ID " + city.getId() + " has been removed");
             }
         } catch (Exception e){
             System.out.println("Invalid Id format");
