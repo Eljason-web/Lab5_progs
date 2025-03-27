@@ -12,7 +12,13 @@ public class Clear implements Commands{
 
     @Override
     public void execute() {
-        collectionManager.clear();
+        boolean isCollectionEmpty = collectionManager.getCityCollection().getCities().isEmpty();
+        if(isCollectionEmpty){
+            System.out.println("Collection is empty");
+            System.out.println("Collection has been cleared");
+        } else {
+            collectionManager.clearCollection();
+        }
     }
 
     @Override
