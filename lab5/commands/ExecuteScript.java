@@ -8,9 +8,12 @@ import java.util.ArrayList;
 
 public class ExecuteScript implements Commands{
     private final CollectionManager collectionManager;
+    private final CommandManager commandManager;
 
-    public ExecuteScript(CollectionManager collectionManager) {
+    public ExecuteScript(CollectionManager collectionManager,
+                         CommandManager commandManager) {
         this.collectionManager = collectionManager;
+        this.commandManager = commandManager;
     }
 
     @Override
@@ -21,7 +24,6 @@ public class ExecuteScript implements Commands{
     @Override
     public void execute(String arg) {
         FileManager fileManager = new FileManager(collectionManager);
-        CommandManager commandManager = new CommandManager(collectionManager);
         ArrayList<String> commands = fileManager.loadCommandsFromScript(arg);
 
         for(String command : commands){
