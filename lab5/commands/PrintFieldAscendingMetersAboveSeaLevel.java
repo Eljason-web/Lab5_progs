@@ -10,14 +10,14 @@ public class PrintFieldAscendingMetersAboveSeaLevel implements Commands {
         this.collectionManager = collectionManager;
     }
 
-     @Override
+    @Override
     public void execute() {
-        if (collectionManager.getCities().isEmpty()) {
+        if (collectionManager.getCityCollection().getCities().isEmpty()) {
             System.out.println("The collection is empty.");
             return;
         }
 
-        collectionManager.getCities().stream()
+        collectionManager.getCityCollection().getCities().stream()
                 .map(City::getMetersAboveSeaLevel)
                 .sorted()
                 .forEach(value -> System.out.println(value + "meters"));
@@ -26,6 +26,7 @@ public class PrintFieldAscendingMetersAboveSeaLevel implements Commands {
 
     @Override
     public void execute(String arg) {
+        System.out.println("This command does not arguments.");
 
     }
 }
