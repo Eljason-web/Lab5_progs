@@ -42,21 +42,15 @@ public class FileManager {
     public void loadCollectionFromXml(String filePath) {
         try (BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(filePath))){
             // Create a JAXB context for City Collection class
-            System.out.println('1');
             JAXBContext context = JAXBContext.newInstance(CityCollection.class);
-            System.out.println('2');
             Unmarshaller unmarshaller = context.createUnmarshaller();
-            System.out.println(3);
-
             // Deserialize from XML file
             CityCollection cityCollection = (CityCollection) unmarshaller.unmarshal(inputStream);
             System.out.println('4');
 
             // Get the TreeSet of Persons
             ArrayDeque<City> loadedCollection = cityCollection.getCities();
-            System.out.println('5');
             collectionManager.setCityCollection(loadedCollection);
-            System.out.println('6');
             System.out.println("Collection loaded successfully!");
         } catch (JAXBException e) {
             System.out.println("Error loading collection: " + e.getMessage());
@@ -64,7 +58,6 @@ public class FileManager {
             System.out.println("Error reading from file: " + e.getMessage());
         }
     }
-
 
     public ArrayList<String> loadCommandsFromScript(String filePath){
         ArrayList<String> commands = new ArrayList<>();
