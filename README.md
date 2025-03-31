@@ -1,3 +1,4 @@
+Lab5_submit
 Лабораторная работа #5
 Введите вариант:
 54140
@@ -71,4 +72,3 @@ public enum Government {
     NOOCRACY,
     TIMOCRACY;
 }
-
