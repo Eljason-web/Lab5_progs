@@ -1,18 +1,14 @@
 package org.example.commands;
 
-import org.example.utils.CollectionManager;
 import org.example.utils.CommandManager;
 import org.example.utils.FileManager;
 
 import java.util.ArrayList;
 
-public class ExecuteScript implements Commands{
-    private final CollectionManager collectionManager;
+public class ExecuteScript implements Commands {
     private final CommandManager commandManager;
 
-    public ExecuteScript(CollectionManager collectionManager,
-                         CommandManager commandManager) {
-        this.collectionManager = collectionManager;
+    public ExecuteScript(CommandManager commandManager) {
         this.commandManager = commandManager;
     }
 
@@ -22,11 +18,11 @@ public class ExecuteScript implements Commands{
     }
 
     @Override
-    public void execute(String arg) {
-        FileManager fileManager = new FileManager(collectionManager);
+    public void execute(String arg) throws Exception {
+        FileManager fileManager = new FileManager();
         ArrayList<String> commands = fileManager.loadCommandsFromScript(arg);
 
-        for(String command : commands){
+        for (String command : commands) {
             System.out.println("COMMAND FROM SCRIPT: " + command);
             commandManager.executeCommand(command);
         }
