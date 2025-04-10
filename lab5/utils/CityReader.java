@@ -7,13 +7,13 @@ import java.time.LocalDateTime;
 import java.util.Scanner;
 
 public class CityReader {
-     private final Scanner scanner;
+    private final Scanner scanner;
 
     public CityReader(Scanner scanner) {
         this.scanner = scanner;
     }
 
-    public City collectCityData(){
+    public City collectCityData() {
 
         String name = addName();
 
@@ -31,12 +31,11 @@ public class CityReader {
 
         Government government = addGovernment();
 
-        Human governor = addGovernor();
-
-        return new City(0, name, coordinates, LocalDate.now(), area, population, metersAboveSeaLevel, agglomeration, climate, government, governor);
+        return new City(0, name, coordinates, LocalDate.now(), area, population, metersAboveSeaLevel, agglomeration,
+                climate, government, new Human(LocalDateTime.now()));
     }
 
-    protected String addName(){
+    protected String addName() {
         System.out.print("Enter name: ");
         return scanner.next();
     }
@@ -98,7 +97,7 @@ public class CityReader {
         return population;
     }
 
-     protected double addMetersAboveSeaLevel() {
+    protected double addMetersAboveSeaLevel() {
         double meters = 0.0;
         boolean validInput = false;
         while (!validInput) {
@@ -114,8 +113,7 @@ public class CityReader {
         return meters;
     }
 
-
-     protected float addAgglomeration() {
+    protected float addAgglomeration() {
         float agglomeration = 0.0f;
         boolean validInput = false;
 
@@ -133,7 +131,7 @@ public class CityReader {
         return agglomeration;
     }
 
-     protected Climate addClimate() {
+    protected Climate addClimate() {
         Climate climate = null;
         boolean validInput = false;
         while (!validInput) {
@@ -143,7 +141,8 @@ public class CityReader {
                 climate = Climate.valueOf(input);
                 validInput = true;
             } catch (IllegalArgumentException e) {
-                System.out.println("Invalid climate. Please choose a valid climate (TROPICAL_SAVANNA, HUMID CONTINENTAL, STEPPE).");
+                System.out.println(
+                        "Invalid climate. Please choose a valid climate (TROPICAL_SAVANNA, HUMID CONTINENTAL, STEPPE).");
                 scanner.nextLine();
 
             }
@@ -152,8 +151,7 @@ public class CityReader {
         return climate;
     }
 
-
-     protected Government addGovernment() {
+    protected Government addGovernment() {
         Government government = null;
         boolean validInput = false;
         while (!validInput) {
@@ -168,37 +166,5 @@ public class CityReader {
             }
         }
         return government;
-    }
-
-     protected Human addGovernor() {
-        LocalDateTime birthday = null;
-        boolean validInput = false;
-
-        while (!validInput) {
-            try {
-                System.out.println("Enter governor's  birthday: ");
-
-                //input for year
-                System.out.println("Enter the year: ");
-                int year = scanner.nextInt();
-                if (year < 1900 || year > 2025) throw new Exception("Allowed year is from 1900");
-
-                //input for month
-                System.out.println("Enter the month (1 to 12): ");
-                int month = scanner.nextInt();
-                //input for day
-                System.out.println("Enter the day: ");
-                int day = scanner.nextInt();
-
-                birthday = LocalDateTime.of(year, month, day, 0, 0);
-                validInput = true;
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-                scanner.nextLine();
-            }
-        }
-
-        return new Human(birthday);
-
     }
 }
