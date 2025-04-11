@@ -2,7 +2,9 @@ package org.example.commands;
 
 import org.example.utils.CollectionManager;
 
-public class Info implements Commands{
+import java.util.Map;
+
+public class Info implements Commands {
     private final CollectionManager collectionManager;
 
     public Info(CollectionManager collectionManager) {
@@ -15,8 +17,9 @@ public class Info implements Commands{
     }
 
     @Override
-    public void execute() {
-        String infoString = collectionManager.info();
-        System.out.println(infoString);
+    public void execute() throws Exception {
+        Map<String, String> infoMap = collectionManager.info();
+        System.out.println("Collection Info:");
+        infoMap.forEach((key, value) -> System.out.println(key + ": " + value));
     }
 }
