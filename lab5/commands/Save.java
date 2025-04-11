@@ -3,10 +3,13 @@ package org.example.commands;
 import org.example.utils.CollectionManager;
 import org.example.utils.FileManager;
 
-public class Save implements Commands{
+public class Save implements Commands {
     private final CollectionManager collectionManager;
-    public Save(CollectionManager collectionManager) {
+    private final String collectionFilePath;
+
+    public Save(CollectionManager collectionManager, String collectionFilePath) {
         this.collectionManager = collectionManager;
+        this.collectionFilePath = collectionFilePath;
     }
 
     @Override
@@ -16,7 +19,7 @@ public class Save implements Commands{
 
     @Override
     public void execute() {
-        FileManager fileManager = new FileManager(collectionManager);
-        fileManager.saveToXml(System.getenv("FILE_COLLECTION_PATH"));
+        FileManager fileManager = new FileManager();
+        fileManager.saveToXml(collectionFilePath, collectionManager.getCityCollection());
     }
 }
