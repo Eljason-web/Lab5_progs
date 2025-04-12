@@ -20,6 +20,7 @@ public class Add implements Commands {
         City newCity = cityReader.collectCityData();
         collectionManager.add(newCity);
         System.out.println("City added: " + newCity.getName());
+        scanner.close();
     }
 
     @Override
