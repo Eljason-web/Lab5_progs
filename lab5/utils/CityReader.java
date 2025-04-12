@@ -175,15 +175,12 @@ public class CityReader {
         boolean validInput = false;
         while (!validInput) {
             try {
-                System.out.println("Enter the birthday of the governor");
-                System.out.println("Enter the day: ");
-                int day = scanner.nextInt();
-                System.out.println("Enter the month: ");
-                int month = scanner.nextInt();
-                System.out.println("Enter the year: ");
-                int year = scanner.nextInt();
+                System.out.println("Enter the birthday of the governor (format: yyyy-MM-dd): ");
+                String input = scanner.next();
 
-                LocalDateTime birthday = LocalDateTime.of(year, month, day, 0, 0);
+                LocalDate date = LocalDate.parse(input);
+                LocalDateTime birthday = date.atStartOfDay();
+
                 governor.setBirthday(birthday);
                 validInput = true;
 
