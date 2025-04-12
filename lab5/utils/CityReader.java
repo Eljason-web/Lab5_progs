@@ -31,8 +31,10 @@ public class CityReader {
 
         Government government = addGovernment();
 
+        Human governor = addGovernor();
+
         return new City(0, name, coordinates, LocalDate.now(), area, population, metersAboveSeaLevel, agglomeration,
-                climate, government, new Human(LocalDateTime.now()));
+                climate, government, governor);
     }
 
     protected String addName() {
@@ -166,5 +168,30 @@ public class CityReader {
             }
         }
         return government;
+    }
+
+    protected Human addGovernor() {
+        Human governor = new Human();
+        boolean validInput = false;
+        while (!validInput) {
+            try {
+                System.out.println("Enter the birthday of the governor");
+                System.out.println("Enter the day: ");
+                int day = scanner.nextInt();
+                System.out.println("Enter the month: ");
+                int month = scanner.nextInt();
+                System.out.println("Enter the year: ");
+                int year = scanner.nextInt();
+
+                LocalDateTime birthday = LocalDateTime.of(year, month, day, 0, 0);
+                governor.setBirthday(birthday);
+                validInput = true;
+
+            } catch (Exception e) {
+                System.out.println("Incorrect date entry");
+                scanner.nextLine();
+            }
+        }
+        return governor;
     }
 }
