@@ -1,5 +1,6 @@
 package org.example.utils;
 
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class ConsoleManager {
@@ -16,23 +17,21 @@ public class ConsoleManager {
         try {
             while (true) {
                 System.out.print("Enter a command: ");
+
                 String command = scanner.nextLine().trim();
                 if (command.isEmpty()) {
                     System.out.println("Error: Command cannot be empty. Please try again.");
                     continue;
                 }
 
-                if ("exit".equalsIgnoreCase(command)) {
-                    System.out.println("Exiting the program. Goodbye!");
+                commandManager.executeCommand(command, scanner);
+                if (command.equals("exit")) {
                     break;
                 }
-
-                boolean success = commandManager.executeCommand(command);
-                if (!success) {
-                    System.out.println("Error: Unrecognized command. Type 'help' for a list of available commands.");
-                }
             }
-        } finally {
+        } catch (NoSuchElementException e) {
+            commandManager.executeCommand("exit", scanner);
+        }finally {
             scanner.close();
         }
     }
