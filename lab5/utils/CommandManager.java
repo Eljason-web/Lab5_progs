@@ -4,6 +4,7 @@ import org.example.commands.*;
 import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 public class CommandManager {
     private final ArrayDeque<String> commandHistory = new ArrayDeque<>();
@@ -29,7 +30,7 @@ public class CommandManager {
         commandsMap.put("filter_by_government", new FilterByGovernment(collectionManager));
     }
 
-    public boolean executeCommand(String command) throws Exception {
+    public void executeCommand(String command, Scanner scanner) throws Exception {
         String[] commandArray = command.split(" ");
         String c = commandArray[0];
         String arg = "";
@@ -42,17 +43,23 @@ public class CommandManager {
 
         if (commandInstance != null) {
             if (arg.isEmpty()) {
-                commandInstance.execute();
+                if (command.equals("add") || command.equals("add_if_max") || command.equals("add_if_min")) {
+                    commandInstance.execute(scanner);
+                } else {
+                    commandInstance.execute();
+                }
             } else {
-                commandInstance.execute(arg);
+                if (c.equals("update") || c.equals("execute_script")) {
+                    commandInstance.execute(arg, scanner);
+                } else {
+                    commandInstance.execute(arg);
+                }
             }
             addToHistory(c);
         } else {
             System.out.println("Unknown command. Enter 'help' for a list of commands.");
         }
-
         System.out.println();
-        return false;
     }
 
     private void addToHistory(String commandName) {
