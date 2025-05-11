@@ -4,6 +4,7 @@ import org.example.collections.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class CityReader {
@@ -38,8 +39,26 @@ public class CityReader {
     }
 
     protected String addName() {
-        System.out.print("Enter name: ");
-        return scanner.next();
+        String name = "";
+        boolean validInput = false;
+
+        while (!validInput) {
+            try {
+                System.out.print("Enter name: ");
+                name = scanner.nextLine().trim();
+                if(name.isEmpty()) {
+                    throw new IllegalArgumentException("Name can not be empty");
+                }
+                if (!name.matches("^(?=.*[a-zA-Z])[a-zA-Z0-9\\-\\s]+$")) { // must contain at least a letter. Numbers, space and hyphen are also permissible
+                    throw new IllegalArgumentException("Name can only contain letters, spaces, and hyphens.");
+                }
+                validInput = true;
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+        return name;
     }
 
     protected Coordinates addCoordinate() {
@@ -49,18 +68,28 @@ public class CityReader {
         while (!validInput) {
             try {
                 System.out.println("Enter person coordinates");
-                System.out.print("x: ");
-                double x = scanner.nextDouble();
-                System.out.print("y: ");
-                long y = scanner.nextLong();
+                //Coordinates constraints with respect to earth's geometry x [-90.0; 90.0], y [-180.0, 180.0]
+
+                System.out.print("x (double): ");
+                double x = Double.parseDouble(scanner.nextLine().trim());
+                if(x < -90.0 || x > 90.0 || Double.isNaN(x)) {
+                    throw new IllegalArgumentException("x must be within -90.0 and 90.0");
+                }
+
+                System.out.print("y (long, without 'L'): ");
+                long y = Long.parseLong(scanner.nextLine().trim());
+                if(y < -180 || y > 180) {
+                    throw new IllegalArgumentException("y must be within -180 and 180");
+                }
+
 
                 coordinates.setX(x);
                 coordinates.setY(y);
                 validInput = true;
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-                System.out.println("Invalid formats. x is integer less than 630 and y is double");
-                scanner.nextLine();
+            } catch (IllegalArgumentException e) {
+                System.out.println("Error: Invalid input - " + e.getMessage());
+            } catch (InputMismatchException e) {
+                System.out.println("Error: Invalid input, x must be double and y must be long");
             }
         }
 
@@ -73,11 +102,17 @@ public class CityReader {
         while (!validInput) {
             try {
                 System.out.print("Enter city area: ");
-                area = scanner.nextFloat();
+                area = Float.parseFloat(scanner.nextLine().trim());
+
+                if(area<=0 || Float.isNaN(area) || Float.isInfinite(area)) {
+                    throw new IllegalArgumentException("Area must be finite float greater than 0");
+                }
+
                 validInput = true;
-            } catch (Exception e) {
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            } catch (InputMismatchException e) {
                 System.out.println("Invalid formats. area is float");
-                scanner.nextLine();
             }
         }
         return area;
@@ -89,11 +124,17 @@ public class CityReader {
         while (!validInput) {
             try {
                 System.out.print("Enter city population: ");
-                population = scanner.nextLong();
+                population = Long.parseLong(scanner.nextLine().trim());
+
+                if(population<=0) {
+                    throw new IllegalArgumentException("Population must be long greater than 0");
+                }
+
                 validInput = true;
-            } catch (Exception e) {
-                System.out.println("Invalid formats. city is long");
-                scanner.nextLine();
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            } catch (InputMismatchException e) {
+                System.out.println("Population must be a long positive number");
             }
         }
         return population;
@@ -105,11 +146,17 @@ public class CityReader {
         while (!validInput) {
             try {
                 System.out.print("Enter meters above sea level: ");
-                meters = scanner.nextDouble();
+                meters = Double.parseDouble(scanner.nextLine().trim());
+
+                if(meters<0) {
+                    throw new IllegalArgumentException("Meters must be greater than 0");
+                }
+
                 validInput = true;
-            } catch (Exception e) {
+            } catch (InputMismatchException e) {
                 System.out.println("Invalid formats. meters is double");
-                scanner.nextLine();
+            } catch (IllegalArgumentException e) {
+                System.out.println("Illegal input " + e.getMessage());
             }
         }
         return meters;
@@ -122,11 +169,14 @@ public class CityReader {
         while (!validInput) {
             try {
                 System.out.print("Enter agglomeration:  ");
-                agglomeration = scanner.nextFloat();
+                agglomeration = Float.parseFloat(scanner.nextLine().trim());
+
+                if(Float.isNaN(agglomeration) || Float.isInfinite(agglomeration)) {
+                    throw new IllegalArgumentException("Agglomeration must be a finite float");
+                }
                 validInput = true;
-            } catch (Exception e) {
+            } catch (InputMismatchException e) {
                 System.out.println("Invalid format. Agglomeration must be a float.");
-                scanner.nextLine();
             }
         }
 
@@ -139,14 +189,11 @@ public class CityReader {
         while (!validInput) {
             try {
                 System.out.println("Enter climate (TROPICAL_SAVANNA, HUMID_CONTINENTAL, STEPPE): ");
-                String input = scanner.next().toUpperCase();
+                String input = scanner.nextLine().toUpperCase().trim();
                 climate = Climate.valueOf(input);
                 validInput = true;
             } catch (IllegalArgumentException e) {
-                System.out.println(
-                        "Invalid climate. Please choose a valid climate (TROPICAL_SAVANNA, HUMID CONTINENTAL, STEPPE).");
-                scanner.nextLine();
-
+                System.out.println("Invalid climate. Please choose a valid climate (TROPICAL_SAVANNA, HUMID CONTINENTAL, STEPPE).");
             }
         }
 
@@ -159,12 +206,11 @@ public class CityReader {
         while (!validInput) {
             try {
                 System.out.println("Enter government type (DESPOTISM, NOOCRACY, TIMOCRACY etc.): ");
-                String input = scanner.next().toUpperCase();
+                String input = scanner.next().toUpperCase().trim();
                 government = Government.valueOf(input);
                 validInput = true;
             } catch (IllegalArgumentException e) {
                 System.out.println("Invalid government type. Please choose a valid government.");
-                scanner.nextLine();
             }
         }
         return government;
@@ -177,6 +223,7 @@ public class CityReader {
             try {
                 System.out.println("Enter the birthday of the governor (format: yyyy-MM-dd): ");
                 String input = scanner.next();
+                scanner.nextLine(); // consume newline
 
                 LocalDate date = LocalDate.parse(input);
                 LocalDateTime birthday = date.atStartOfDay();
