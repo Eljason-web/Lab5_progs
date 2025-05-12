@@ -31,7 +31,7 @@ public class CommandManager {
     }
 
     public void executeCommand(String command, Scanner scanner) throws Exception {
-        String[] commandArray = command.split(" ");
+        String[] commandArray = command.split("\\s+");
         String c = commandArray[0];
         String arg = "";
 
